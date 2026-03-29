@@ -1,7 +1,8 @@
 import express from 'express'
 
 import { connectDB } from './db.js'
-import patientsRouter from './routes/patients.route.js'
+import authRouter from './routes/auth.routes.js'
+import patientsRouter from './routes/patients.routes.js'
 
 await connectDB()
 
@@ -11,6 +12,7 @@ const port = 3000
 app.use(express.json())
 
 app.use('/patients', patientsRouter)
+app.use('/auth', authRouter)
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
