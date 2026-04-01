@@ -8,12 +8,12 @@ const router = Router()
 router
   .route('/')
   .get(authMiddleware, patientsController.getAllPatients)
-  .post(patientsController.createPatient)
+  .post(authMiddleware, patientsController.createPatient)
 
 router
   .route('/:patientsId')
   .get(authMiddleware, patientsController.getPatientById)
-  .patch(patientsController.updatePatient)
-  .delete(patientsController.deletePatient)
+  .patch(authMiddleware, patientsController.updatePatient)
+  .delete(authMiddleware, patientsController.deletePatient)
 
 export default router

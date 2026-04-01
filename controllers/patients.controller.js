@@ -21,7 +21,10 @@ export const createPatient = async (req, res) => {
     return res.status(400).json({ message: 'patient is required' })
   }
 
-  const newPatient = await patientsService.createPatient(patient)
+  const newPatient = await patientsService.createPatient({
+    ...patient,
+    user: req.user.id,
+  })
   res.status(201).json(newPatient)
 }
 
@@ -37,12 +40,15 @@ export const updatePatient = async (req, res) => {
 }
 
 export const deletePatient = async (req, res) => {
-  const id = req.params.patientsId
-  const deletedPatient = await patientsService.deletePatient(id)
-
-  if (!deletedPatient) {
-    return res.status(404).json({ message: `No patient with id ${id}` })
+  const userId = req.user.id
+  const patientId = req.params.patientsId
+  try {
+    const deletedPatient = await patientsService.deletePatient(
+      patientId,
+      userId
+    )
+    res.json(deletedPatient)
+  } catch {
+    return res.status(404).json({ message: `No patient with id ${patientId}` })
   }
-
-  res.json(deletedPatient)
 }
