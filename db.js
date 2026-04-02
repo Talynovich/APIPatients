@@ -1,11 +1,10 @@
 import mongoose from 'mongoose'
 
-const uri =
-  'mongodb+srv://api-user:LXV3xyCZ@cluster0.h4rfuqj.mongodb.net/patients?retryWrites=true&w=majority'
+const url = process.env.MONGO_URL
 
 export const connectDB = async () => {
   try {
-    await mongoose.connect(uri)
+    await mongoose.connect(url)
     console.log('бд подключена')
   } catch (err) {
     console.error('Ошибка подключения к бд', err)
