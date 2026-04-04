@@ -1,14 +1,21 @@
 import { Router } from 'express'
 
 import * as patientsController from '../controllers/patients.controller.js'
-import { authMiddleware } from '../middlewares/authMiddleware.js'
+import {
+  authMiddleware,
+  checkRoleMiddleware,
+} from '../middlewares/authMiddleware.js'
 
 const router = Router()
 
 router
   .route('/')
   .get(authMiddleware, patientsController.getAllPatients)
-  .post(authMiddleware, patientsController.createPatient)
+  .post(
+    authMiddleware,
+    checkRoleMiddleware(['Doctor']),
+    patientsController.createPatient
+  )
 
 router
   .route('/:patientsId')

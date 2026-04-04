@@ -11,7 +11,7 @@ const router = Router()
 router.get(
   '/doctors',
   authMiddleware,
-  checkRoleMiddleware(['Admin', 'Doctor']),
+  checkRoleMiddleware(['Admin']),
   getAllUsers
 )
 router.post(
