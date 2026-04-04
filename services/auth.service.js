@@ -32,7 +32,7 @@ export const login = async (email, password) => {
   return {
     accessToken,
     refreshToken,
-    user: { id: user.id, email: user.email },
+    user: { id: user.id, email: user.email, role: user.role },
   }
 }
 
