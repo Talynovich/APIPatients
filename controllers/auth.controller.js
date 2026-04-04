@@ -1,5 +1,3 @@
-import jwt from 'jsonwebtoken'
-
 import * as authService from '../services/auth.service.js'
 
 export const register = async (req, res) => {
@@ -29,5 +27,20 @@ export const refresh = async (req, res) => {
     res.json(tokens)
   } catch (error) {
     res.status(400).send('Refresh token error')
+  }
+}
+
+export const setupAdmin = async (req, res) => {
+  try {
+    const admin = await authService.setupAdminService(req.body)
+
+    res.status(201).json({
+      message: 'Администратор создан',
+      admin: { email: admin.email },
+    })
+  } catch (e) {
+    res.status(e.status || 500).json({
+      message: e.message || 'Ошибка сервера',
+    })
   }
 }

@@ -12,3 +12,25 @@ export const authMiddleware = (req, res, next) => {
     res.status(401).json({ message: 'Invalid token' })
   }
 }
+
+export const checkRoleMiddleware = (roles) => {
+  return (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: 'Пользователь не авторизован' })
+      }
+
+      const userRole = req.user.role
+
+      if (!roles.includes(userRole)) {
+        return res.status(403).json({
+          message: `Доступ запрещен. Требуемая роль: ${roles.join(' или ')}`,
+        })
+      }
+
+      next()
+    } catch (e) {
+      res.status(500).json({ message: 'Ошибка проверки прав доступа' })
+    }
+  }
+}
