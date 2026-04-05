@@ -1,5 +1,4 @@
-import { setupUserService } from '../services/users.service.js'
-import { getAllService } from '../services/users.service.js'
+import { setupUserService, getAllService } from '../services/users.service.js'
 
 export const setupUser = async (req, res) => {
   try {

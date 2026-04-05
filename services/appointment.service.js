@@ -5,7 +5,5 @@ export const createAppointment = async (appointmentData) => {
 }
 
 export const getAppointmentsById = async (doctorId) => {
-  return await Appointment.find({ doctor: doctorId }).sort({
-    appointmentDate: 1,
-  })
+  return await Appointment.find({ doctor: doctorId })
 }

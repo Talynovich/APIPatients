@@ -5,7 +5,11 @@ import {
 
 export const create = async (req, res) => {
   try {
-    const appointment = await createAppointment(req.body)
+    const appointmentData = {
+      ...req.body,
+      doctor: req.user.id
+    };
+    const appointment = await createAppointment(appointmentData)
     res.status(201).json(appointment)
   } catch (error) {
     res
@@ -17,7 +21,6 @@ export const create = async (req, res) => {
 export const getMyAppointments = async (req, res) => {
   try {
     const doctorId = req.user.id
-    console.log(doctorId, 'doctorId<<<<>>>')
     const appointments = await getAppointmentsById(doctorId)
     console.log(appointments, 'appointments')
 
