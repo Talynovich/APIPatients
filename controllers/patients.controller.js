@@ -1,7 +1,8 @@
 import * as patientsService from '../services/patients.service.js'
 
 export const getAllPatients = async (req, res) => {
-  const patients = await patientsService.getAllPatients()
+  const user = req.user
+  const patients = await patientsService.getAllPatients(user)
   res.json(patients)
 }
 

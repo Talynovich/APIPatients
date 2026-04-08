@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken'
 
 import { ROLES } from '../constants/common.js'
 import { User } from '../models/userModel.js'
-import { userRole } from '../models/userRoleModel.js'
 
 export const register = async (email, password) => {
   const user = await User.findOne({ email })
@@ -14,20 +13,32 @@ export const register = async (email, password) => {
 }
 
 export const login = async (email, password) => {
-  let user = await User.findOne({ email })
+  const user = await User.findOne({ email })
   if (!user) {
-    user = await userRole.findOne({ email })
+    throw new Error(
+      'User not found. Please verify your email address is correct.'
+    )
   }
   const isPasswordValid = await bcrypt.compare(password, user?.password)
-  if (!user || !isPasswordValid) {
-    throw new Error('User already exists')
+  if (!isPasswordValid) {
+    throw new Error(
+      'The password is incorrect. Please check that it is correct.'
+    )
   }
-  const accessToken = jwt.sign({ id: user._id, role: user.role }, 'SECRET', {
-    expiresIn: '15m',
-  })
-  const refreshToken = jwt.sign({ id: user._id, role: user.role }, 'SECRET', {
-    expiresIn: '3d',
-  })
+  const accessToken = jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: '15m',
+    }
+  )
+  const refreshToken = jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: '3d',
+    }
+  )
 
   return {
     accessToken,
@@ -38,37 +49,48 @@ export const login = async (email, password) => {
 
 export const refresh = async (token) => {
   try {
-    const payload = await jwt.verify(token, 'SECRET')
-    const accessToken = jwt.sign({ id: payload.id }, 'SECRET', {
-      expiresIn: '15m',
-    })
-    const refreshToken = jwt.sign({ id: payload.id }, 'SECRET', {
-      expiresIn: '3d',
-    })
-    return { accessToken, refreshToken }
+    const payload = await jwt.verify(token, process.env.JWT_SECRET)
+    const accessToken = jwt.sign(
+      { id: payload.id, role: payload.role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '15m',
+      }
+    )
+    const refreshToken = jwt.sign(
+      { id: payload.id, role: payload.role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '3d',
+      }
+    )
+    return {
+      accessToken,
+      refreshToken,
+      user: { id: payload.id, email: payload.email, role: payload.role },
+    }
   } catch {
     throw new Error('Refresh token error')
   }
 }
 
 export const setupAdminService = async (data) => {
-  const userCount = await userRole.countDocuments({ role: 'Admin' })
+  const userCount = await User.countDocuments({ role: 'Admin' })
 
   if (userCount > 0) {
     const error = new Error(
-      'Система уже инициализирована. Использование этого роута запрещено.'
+      'The system has already been initialized. Use of this route is prohibited.'
     )
     error.status = 400
     throw error
   }
 
   const { email, password, fullName } = data
-  const admin = await userRole.create({
+
+  return await User.create({
     fullName,
     email,
     password,
     role: ROLES.ADMIN,
   })
-
-  return admin
 }

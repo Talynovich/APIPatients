@@ -1,17 +1,17 @@
-import { userRole } from '../models/userRoleModel.js'
+import { User } from '../models/userModel.js'
 
 export const setupUserService = async (data) => {
   const { email, password, fullName } = data
 
-  const doctor = await userRole.create({
+  const user = await User.create({
     fullName,
     email,
     password,
   })
 
-  return doctor
+  return user
 }
 
 export const getAllService = async () => {
-  return await userRole.find({ role: 'Doctor' })
+  return await User.find({ role: 'Doctor' })
 }

@@ -4,23 +4,27 @@ import * as patientsController from '../controllers/patients.controller.js'
 import {
   authMiddleware,
   checkRoleMiddleware,
+  validate,
 } from '../middlewares/authMiddleware.js'
+import { updatePatientSchema } from '../validations/patient.js'
 
 const router = Router()
 
-router
-  .route('/')
-  .get(authMiddleware, patientsController.getAllPatients)
-  .post(
-    authMiddleware,
-    checkRoleMiddleware(['Doctor']),
-    patientsController.createPatient
-  )
+router.get('/', authMiddleware, patientsController.getAllPatients)
+router.post(
+  '/',
+  authMiddleware,
+  checkRoleMiddleware(['Doctor']),
+  patientsController.createPatient
+)
 
-router
-  .route('/:patientsId')
-  .get(authMiddleware, patientsController.getPatientById)
-  .patch(authMiddleware, patientsController.updatePatient)
-  .delete(authMiddleware, patientsController.deletePatient)
+router.get('/:patientsId', authMiddleware, patientsController.getPatientById)
+router.patch(
+  '/:patientsId',
+  authMiddleware,
+  validate(updatePatientSchema),
+  patientsController.updatePatient
+)
+router.delete('/:patientsId', authMiddleware, patientsController.deletePatient)
 
 export default router

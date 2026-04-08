@@ -1,22 +1,21 @@
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
 
+import { ROLES } from '../constants/common.js'
+
 const userSchema = new mongoose.Schema(
   {
-    email: {
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    fullName: { type: String, required: true },
+    role: {
       type: String,
-      required: true,
-      unique: true, // чтобы значение для данного поля было уникальным
+      enum: [ROLES.ADMIN, ROLES.USER],
+      default: ROLES.ADMIN,
     },
-    password: {
-      type: String,
-      required: true,
-      minLength: 8, // минимальное количество символов
-    },
+    specialization: { type: String },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 )
 
 userSchema.pre('save', async function () {
@@ -26,4 +25,4 @@ userSchema.pre('save', async function () {
   }
 })
 
-export const User = mongoose.model('users', userSchema)
+export const User = mongoose.model('User', userSchema)

@@ -6,7 +6,7 @@ export const authMiddleware = (req, res, next) => {
     return res.status(401).json({ message: 'Authentication header required' })
   }
   try {
-    req.user = jwt.verify(authHeader, 'SECRET')
+    req.user = jwt.verify(authHeader, process.env.JWT_SECRET)
     next()
   } catch {
     res.status(401).json({ message: 'Invalid token' })
@@ -17,20 +17,28 @@ export const checkRoleMiddleware = (roles) => {
   return (req, res, next) => {
     try {
       if (!req.user) {
-        return res.status(401).json({ message: 'Пользователь не авторизован' })
+        return res.status(401).json({ message: 'User is not authorized' })
       }
 
       const userRole = req.user.role
 
       if (!roles.includes(userRole)) {
         return res.status(403).json({
-          message: `Доступ запрещен. Требуемая роль: ${roles.join(' или ')}`,
+          message: `Access denied. Required role: ${roles.join(' or ')}`,
         })
       }
 
       next()
     } catch (e) {
-      res.status(500).json({ message: 'Ошибка проверки прав доступа' })
+      res.status(500).json({ message: 'Permission check error' })
     }
   }
+}
+
+export const validate = (schema) => (req, res, next) => {
+  const { error } = schema.validate(req.body)
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message })
+  }
+  next()
 }
