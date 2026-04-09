@@ -1,14 +1,16 @@
 import mongoose from 'mongoose'
 
+import { ROLES } from '../constants/common.js'
+
 const appointmentSchema = new mongoose.Schema({
   doctor: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: ROLES.DOCTOR,
     required: true,
   },
   patient: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Patient',
+    ref: ROLES.PATIENT,
     required: true,
   },
   appointmentDate: { type: Date, required: true },

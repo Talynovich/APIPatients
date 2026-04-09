@@ -1,8 +1,9 @@
+import { ROLES } from '../constants/common.js'
 import { Patients } from '../models/patientsModel.js'
 
 export const getAllPatients = async (user) => {
   const { role, id } = user
-  if (role === 'Admin') {
+  if (role === ROLES.ADMIN) {
     return Patients.find()
   }
   return await Patients.find({ user: id })

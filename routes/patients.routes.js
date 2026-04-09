@@ -1,5 +1,6 @@
 import { Router } from 'express'
 
+import { ROLES } from '../constants/common.js'
 import * as patientsController from '../controllers/patients.controller.js'
 import {
   authMiddleware,
@@ -14,7 +15,7 @@ router.get('/', authMiddleware, patientsController.getAllPatients)
 router.post(
   '/',
   authMiddleware,
-  checkRoleMiddleware(['Doctor']),
+  checkRoleMiddleware([ROLES.DOCTOR]),
   patientsController.createPatient
 )
 

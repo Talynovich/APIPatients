@@ -1,5 +1,6 @@
 import { Router } from 'express'
 
+import { ROLES } from '../constants/common.js'
 import {
   create,
   getMyAppointments,
@@ -7,15 +8,23 @@ import {
 import {
   authMiddleware,
   checkRoleMiddleware,
+  validate,
 } from '../middlewares/authMiddleware.js'
+import { appointmentValidationSchema } from '../validations/appointment.js'
 
 const router = Router()
 
-router.post('/', authMiddleware, checkRoleMiddleware(['Doctor']), create)
+router.post(
+  '/',
+  authMiddleware,
+  checkRoleMiddleware([ROLES.DOCTOR]),
+  validate(appointmentValidationSchema),
+  create
+)
 router.get(
   '/me',
   authMiddleware,
-  checkRoleMiddleware(['Doctor']),
+  checkRoleMiddleware([ROLES.DOCTOR]),
   getMyAppointments
 )
 

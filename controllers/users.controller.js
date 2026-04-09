@@ -1,15 +1,15 @@
-import { setupUserService, getAllService } from '../services/users.service.js'
+import { getAllService, setupUserService } from '../services/users.service.js'
 
 export const setupUser = async (req, res) => {
   try {
     const user = await setupUserService(req.body)
     res.status(201).json({
-      message: 'Доктор успешно создан',
+      message: 'Doctor created successfully',
       user: { email: user.email, role: user.role },
     })
   } catch (e) {
     res.status(400).json({
-      message: 'Доктор с таким email уже создан',
+      message: 'A doctor with this email has already been created',
     })
   }
 }

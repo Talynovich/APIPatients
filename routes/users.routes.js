@@ -1,5 +1,6 @@
 import { Router } from 'express'
 
+import { ROLES } from '../constants/common.js'
 import { getAllUsers, setupUser } from '../controllers/users.controller.js'
 import {
   authMiddleware,
@@ -11,13 +12,13 @@ const router = Router()
 router.get(
   '/doctors',
   authMiddleware,
-  checkRoleMiddleware(['Admin']),
+  checkRoleMiddleware([ROLES.ADMIN]),
   getAllUsers
 )
 router.post(
   '/doctors',
   authMiddleware,
-  checkRoleMiddleware(['Admin']),
+  checkRoleMiddleware([ROLES.ADMIN]),
   setupUser
 )
 

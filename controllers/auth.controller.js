@@ -6,7 +6,7 @@ export const register = async (req, res) => {
     const user = await authService.register(email, password)
     res.status(201).json({ id: user.id, email: user.email })
   } catch (error) {
-    res.status(400).send({ message: error.message })
+    res.status(400).json({ message: error.message })
   }
 }
 
@@ -16,7 +16,7 @@ export const login = async (req, res) => {
     const user = await authService.login(email, password)
     res.json(user)
   } catch (error) {
-    res.status(400).send({ message: error.message })
+    res.status(400).json({ message: error.message })
   }
 }
 
@@ -26,7 +26,7 @@ export const refresh = async (req, res) => {
     const tokens = await authService.refresh(refreshToken)
     res.json(tokens)
   } catch (error) {
-    res.status(400).send('Refresh token error')
+    res.status(400).json('Refresh token error')
   }
 }
 

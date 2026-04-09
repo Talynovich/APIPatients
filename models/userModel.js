@@ -1,7 +1,18 @@
-import bcrypt from 'bcrypt'
-import mongoose from 'mongoose'
+import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 
-import { ROLES } from '../constants/common.js'
+
+
+import { ROLES } from '../constants/common.js';
+
+
+
+
+
+
+
+
+
 
 const userSchema = new mongoose.Schema(
   {
@@ -10,7 +21,7 @@ const userSchema = new mongoose.Schema(
     fullName: { type: String, required: true },
     role: {
       type: String,
-      enum: [ROLES.ADMIN, ROLES.USER],
+      enum: [ROLES.ADMIN, ROLES.DOCTOR],
       default: ROLES.ADMIN,
     },
     specialization: { type: String },

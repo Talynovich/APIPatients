@@ -75,7 +75,7 @@ export const refresh = async (token) => {
 }
 
 export const setupAdminService = async (data) => {
-  const userCount = await User.countDocuments({ role: 'Admin' })
+  const userCount = await User.countDocuments({ role: ROLES.ADMIN })
 
   if (userCount > 0) {
     const error = new Error(

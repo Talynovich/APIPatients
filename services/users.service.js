@@ -1,3 +1,4 @@
+import { ROLES } from '../constants/common.js'
 import { User } from '../models/userModel.js'
 
 export const setupUserService = async (data) => {
@@ -13,5 +14,5 @@ export const setupUserService = async (data) => {
 }
 
 export const getAllService = async () => {
-  return await User.find({ role: 'Doctor' })
+  return await User.find({ role: ROLES.DOCTOR })
 }
